@@ -1,6 +1,5 @@
 const CourseSchedule = require('./model');
 
-// Get Course Schedule by Course ID
 exports.getCourseSchedule = async (req, res) => {
     try {
         const courseId = req.params.id;

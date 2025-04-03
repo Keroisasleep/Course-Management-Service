@@ -1,17 +1,17 @@
-const schedules = [
-    { course_id: 1, day: "Monday", time: "10:00 AM - 12:00 PM", room: "101A" },
-    { course_id: 2, day: "Tuesday", time: "2:00 PM - 4:00 PM", room: "202B" },
-    { course_id: 1, day: "Wednesday", time: "1:00 PM - 3:00 PM", room: "101A" },
-];
+const CourseSchedule = require('./model');
 
-exports.getCourseSchedule = (req, res) => {
-    const courseId = parseInt(req.params.id);
-    const courseSchedule = schedules.filter(schedule => schedule.course_id === courseId);
+// Get Course Schedule by Course ID
+exports.getCourseSchedule = async (req, res) => {
+    try {
+        const courseId = req.params.id;
+        const schedule = await CourseSchedule.find({ course_id: courseId });
 
-    if (courseSchedule.length > 0) {
-        res.json({ success: true, data: courseSchedule });
-    } else {
-        res.status(404).json({ success: false, message: "Course schedule not found" });
+        if (!schedule.length) {
+            return res.status(404).json({ message: 'No schedule found for this course' });
+        }
+
+        res.status(200).json(schedule);
+    } catch (error) {
+        res.status(500).json({ error: 'Server error' });
     }
 };
-

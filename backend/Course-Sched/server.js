@@ -1,11 +1,18 @@
 const express = require('express');
-const courseRoutes = require('./route');
+const mongoose = require('mongoose');
+const router = require('./router');
 
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
-app.use('/api', courseRoutes);
+// Connect to MongoDB
+mongoose.connect('mongodb://localhost:27017/courses_db', {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+}).then(() => console.log('MongoDB Connected'))
+  .catch(err => console.error('MongoDB Connection Error:', err));
 
-app.listen(PORT, () => {
-    console.log(`Server is running on http://localhost:${PORT}`);
-});
+app.use(express.json());
+app.use('/api', router);
+
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
